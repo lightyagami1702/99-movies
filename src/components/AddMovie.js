@@ -10,6 +10,8 @@ const AddMovie = () => {
     year: "",
     description: "",
     image: "",
+    rated: 0,
+    rating: 0,
   });
   const [loading, setLoading] = useState(false);
   const addMovie = async () => {
@@ -21,6 +23,7 @@ const AddMovie = () => {
       buttons: false,
       timer: 3000,
     });
+    setForm({ title: "", year: "", description: "", image: "" });
     setLoading(false);
   };
   return (
