@@ -5,7 +5,7 @@ import AddMovie from "./components/AddMovie";
 import Detail from "./components/Detail";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 const Appstate = createContext();
 
 function App() {
