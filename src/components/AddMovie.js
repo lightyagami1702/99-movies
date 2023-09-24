@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import MovieCreationRoundedIcon from "@mui/icons-material/MovieCreationRounded";
 import { ThreeDots } from "react-loader-spinner";
 import { addDoc } from "firebase/firestore";
 import { moviesRef } from "./firebase/firebase";
 import swal from "sweetalert";
+import { Appstate } from "../App";
+import { useNavigate } from "react-router-dom";
 const AddMovie = () => {
+  const useAppstate = useContext(Appstate);
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     title: "",
     year: "",
@@ -16,14 +20,32 @@ const AddMovie = () => {
   const [loading, setLoading] = useState(false);
   const addMovie = async () => {
     setLoading(true);
-    await addDoc(moviesRef, form);
-    swal({
-      title: "Added Successfully",
-      icon: "success",
-      buttons: false,
-      timer: 3000,
-    });
-    setForm({ title: "", year: "", description: "", image: "" });
+    try {
+      if (useAppstate.login) {
+        await addDoc(moviesRef, form);
+        swal({
+          title: "Successfully Added",
+          icon: "success",
+          buttons: false,
+          timer: 3000,
+        });
+        setForm({
+          title: "",
+          year: "",
+          description: "",
+          image: "",
+        });
+      } else {
+        navigate("/login");
+      }
+    } catch (err) {
+      swal({
+        title: err,
+        icon: "error",
+        buttons: false,
+        timer: 3000,
+      });
+    }
     setLoading(false);
   };
   return (

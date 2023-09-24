@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactStars from "react-stars";
 import { reviewsRef, db } from "./firebase/firebase";
 import {
@@ -11,7 +11,11 @@ import {
 } from "firebase/firestore";
 import { ThreeDots } from "react-loader-spinner";
 import swal from "sweetalert";
+import { Appstate } from "../App";
+import { useNavigate } from "react-router-dom";
 const Reviews = ({ id, prevRating, userRated }) => {
+  const useAppstate = useContext(Appstate);
+  const navigate = useNavigate();
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [reviewsLoading, setReviewsLoading] = useState(false);
@@ -20,26 +24,30 @@ const Reviews = ({ id, prevRating, userRated }) => {
   const sendReview = async () => {
     setLoading(true);
     try {
-      await addDoc(reviewsRef, {
-        movieid: id,
-        name: "pranav",
-        rating: rating,
-        thought: form,
-        timestamp: new Date().getTime(),
-      });
-      const ref = doc(db, "movies", id);
-      await updateDoc(ref, {
-        rating: prevRating + rating,
-        rated: userRated + 1,
-      });
-      setRating(0);
-      setForm("");
-      swal({
-        title: "Review Sent",
-        icon: "success",
-        buttons: false,
-        timer: 3000,
-      });
+      if (useAppstate.login) {
+        await addDoc(reviewsRef, {
+          movieid: id,
+          name: useAppstate.userName,
+          rating: rating,
+          thought: form,
+          timestamp: new Date().getTime(),
+        });
+        const ref = doc(db, "movies", id);
+        await updateDoc(ref, {
+          rating: prevRating + rating,
+          rated: userRated + 1,
+        });
+        setRating(0);
+        setForm("");
+        swal({
+          title: "Review Sent",
+          icon: "success",
+          buttons: false,
+          timer: 3000,
+        });
+      } else {
+        navigate("/login");
+      }
     } catch (error) {
       swal({
         title: error.message,
