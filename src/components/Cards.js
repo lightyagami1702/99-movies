@@ -39,7 +39,7 @@ const Cards = () => {
                   alt="Movie Poster"
                 />
                 <h1>
-                  <span className="text-gray-500">Name:</span>
+                  <span className="text-gray-500"></span>
                   {e.title}
                 </h1>
                 <h1 className="flex items-center">

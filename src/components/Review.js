@@ -21,6 +21,7 @@ const Reviews = ({ id, prevRating, userRated }) => {
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [form, setForm] = useState("");
   const [data, setData] = useState([]);
+  const [newAdded, setNewAdded] = useState(0);
   const sendReview = async () => {
     setLoading(true);
     try {
@@ -39,6 +40,8 @@ const Reviews = ({ id, prevRating, userRated }) => {
         });
         setRating(0);
         setForm("");
+        setNewAdded(newAdded + 1);
+
         swal({
           title: "Review Sent",
           icon: "success",
@@ -61,6 +64,7 @@ const Reviews = ({ id, prevRating, userRated }) => {
   useEffect(() => {
     async function getData() {
       setReviewsLoading(true);
+      setData([]);
       let quer = query(reviewsRef, where("movieid", "==", id));
       const querySnapshot = await getDocs(quer);
       querySnapshot.forEach((doc) => {
@@ -69,7 +73,7 @@ const Reviews = ({ id, prevRating, userRated }) => {
       setReviewsLoading(false);
     }
     getData();
-  }, [id]);
+  }, [newAdded]);
   return (
     <div className="mt-4 border-t-2 border-gray-700 w-full">
       <ReactStars
